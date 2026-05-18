@@ -39,7 +39,7 @@ python main.py
 - Attach screenshots if relevant
 
 ### Suggesting Features
-- Open a [Feature Request](https://github.com/markpad/markpad/issues/new?template=feature_request.md)
+- Open a [Feature Request](https://github.com/zamin-naqvi/MarkPad/issues/new?template=feature_request.md)
 - Describe the use case and expected behavior
 
 ### Pull Requests
