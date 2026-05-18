@@ -12,7 +12,7 @@ Thank you for your interest in contributing to MarkPad! We welcome contributions
 
 ```bash
 # Clone the repository
-git clone https://github.com/markpad/markpad.git
+git clone https://github.com/zamin-naqvi/MarkPad.git
 cd markpad
 
 # Create virtual environment
