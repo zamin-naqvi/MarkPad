@@ -34,7 +34,7 @@ python main.py
 ## 📋 How to Contribute
 
 ### Reporting Bugs
-- Use the [GitHub Issues](https://github.com/markpad/markpad/issues) tracker
+- Use the [GitHub Issues](https://github.com/zamin-naqvi/MarkPad/issues) tracker
 - Include your OS, Python version, and steps to reproduce
 - Attach screenshots if relevant
 

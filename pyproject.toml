@@ -48,9 +48,9 @@ dev = [
 markpad = "markpad.app:main"
 
 [project.urls]
-Homepage = "https://github.com/markpad/markpad"
-Repository = "https://github.com/markpad/markpad"
-"Bug Tracker" = "https://github.com/markpad/markpad/issues"
+Homepage = "https://github.com/zamin-naqvi/MarkPad"
+Repository = "https://github.com/zamin-naqvi/MarkPad"
+"Bug Tracker" = "https://github.com/zamin-naqvi/MarkPad/issues"
 
 [tool.setuptools.packages.find]
 include = ["markpad*"]
