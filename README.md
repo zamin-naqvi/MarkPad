@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icons/icon.png" alt="MarkPad Logo" width="120" height="120">
+  <img src="icons/app_icon.png" alt="MarkPad Logo" width="120" height="120">
 </p>
 
 <h1 align="center">MarkPad</h1>
@@ -35,7 +35,23 @@
 
 **MarkPad** is a feature-rich, performance-first Markdown editor designed for writers, developers, and knowledge workers. It delivers **instant live preview** with zero-delay rendering, powered by an incremental DOM-diffing engine that only updates what's changed — no full page reloads, no flickering.
 
-Whether you're drafting documentation, taking notes, or building a personal knowledge base, MarkPad provides a seamless writing experience with powerful tools at your fingertips.
+### 📸 Screenshots
+
+| Split View | Mind Map Editor |
+|:---:|:---:|
+| <img src="split.png" alt="Split View"> | <img src="mindmap_editor.png" alt="Mind Map Editor"> |
+
+| Command Palette | Markdown Mindmap |
+|:---:|:---:|
+| <img src="command_palette.png" alt="Command Palette"> | <img src="markdow_mindmap.png" alt="Markdown Mindmap"> |
+
+| Multi-Tab Interface | Gantt Chart |
+|:---:|:---:|
+| <img src="multi_tab.png" alt="Multi-Tab Interface"> | <img src="gantt_chart.png" alt="Gantt Chart"> |
+
+| ER Diagram | Image |
+|:---:|:---:|
+| <img src="ER_diagram.png" alt="ER Diagram"> | <img src="image.png" alt="Image"> |
 
 ### Why MarkPad?
 
