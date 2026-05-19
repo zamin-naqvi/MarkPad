@@ -66,6 +66,23 @@ class RenderEngine:
                 use_pygments=HAS_PYGMENTS,
             ),
             "sane_lists",
+            "admonition",     # For callouts / notes
+            "footnotes",      # [^1] style footnotes
+            "def_list",       # Definition lists
+            "attr_list",      # Custom attributes via {: #id .class}
+            "meta",           # YAML frontmatter support
+            "md_in_html",     # Markdown inside HTML tags
+            "abbr",           # Abbreviations
+            "pymdownx.tasklist",
+            "pymdownx.superfences",
+            "pymdownx.tabbed",
+            "pymdownx.details",
+            "pymdownx.mark",
+            "pymdownx.caret",
+            "pymdownx.tilde",
+            "pymdownx.critic",
+            "pymdownx.magiclink",
+            "pymdownx.keys",
         ]
         if HAS_NL2BR:
             extensions.append("nl2br")
@@ -149,6 +166,7 @@ class RenderEngine:
         return {
             "math": bool(re.search(r'\$\$.*?\$\$|\$[^$]+\$', text, re.DOTALL)),
             "mermaid": "```mermaid" in text,
+            "chart": "```chart" in text,
             "code": "```" in text,
             "table": bool(re.search(r'^\|.*\|', text, re.MULTILINE)),
             "emoji": HAS_EMOJI and bool(re.search(r':[a-z_]+:', text)),
@@ -290,6 +308,65 @@ def build_preview_html(
     /* Smooth transitions for incremental updates */
     .markpad-block {{ transition: opacity 0.15s ease; }}
 
+    /* Advanced Markdown Features Styling */
+    .admonition {{
+        background: {code_bg}; border-left: 4px solid {accent};
+        padding: 12px 16px; margin: 1em 0; border-radius: 4px;
+    }}
+    .admonition-title {{ font-weight: bold; margin-bottom: 6px; text-transform: uppercase; font-size: 0.9em; }}
+    .admonition p:last-child {{ margin-bottom: 0; }}
+    .admonition.note {{ border-left-color: #3b82f6; }}
+    .admonition.warning {{ border-left-color: #eab308; }}
+    .admonition.danger {{ border-left-color: #ef4444; }}
+    .admonition.success {{ border-left-color: #22c55e; }}
+
+    .footnote {{ font-size: 0.85em; color: {quote_color}; border-top: 1px solid {border}; padding-top: 10px; margin-top: 2em; }}
+    .footnote hr {{ display: none; }}
+    
+    dl {{ margin: 1em 0; }}
+    dt {{ font-weight: bold; margin-top: 0.5em; }}
+    dd {{ margin-left: 1.5em; margin-bottom: 0.5em; color: {quote_color}; }}
+
+    /* pymdownx styles */
+    .task-list-item {{ list-style-type: none; }}
+    .task-list-control {{ margin-right: 8px; }}
+    mark {{ background: rgba(255, 255, 0, 0.4); color: inherit; padding: 0 4px; border-radius: 4px; }}
+    ins {{ text-decoration: none; border-bottom: 2px solid #22c55e; }}
+    del {{ text-decoration: line-through; opacity: 0.7; color: #ef4444; }}
+    kbd {{
+        background: {code_bg}; border: 1px solid {border};
+        border-radius: 4px; padding: 2px 6px; font-size: 0.8em;
+        font-family: inherit; font-weight: bold;
+        box-shadow: 0 2px 0 {border};
+    }}
+    .tabbed-set > input {{ display: none; }}
+    .tabbed-labels {{ display: flex; border-bottom: 1px solid {border}; margin-bottom: 16px; flex-wrap: wrap; }}
+    .tabbed-labels > label {{
+        padding: 8px 16px; cursor: pointer; border-bottom: 2px solid transparent;
+        transition: all 0.2s; font-weight: 600; color: {quote_color};
+    }}
+    .tabbed-labels > label:hover {{ color: {fg}; }}
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {{
+        border-bottom-color: {accent}; color: {accent};
+    }}
+    .tabbed-content > div {{ display: none; }}
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-content > div:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-content > div:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-content > div:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-content > div:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-content > div:nth-child(5) {{
+        display: block;
+    }}
+    details {{
+        background: {code_bg}; border: 1px solid {border};
+        border-radius: 6px; margin: 1em 0; padding: 0 16px;
+    }}
+    summary {{ padding: 12px 0; font-weight: 600; cursor: pointer; outline: none; }}
+
     /* Pygments */
     {pygments_css}
 
@@ -329,6 +406,33 @@ def build_preview_html(
           }});
         </script>
         """
+        
+    if features.get("chart"):
+        scripts += """
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+          window.renderCharts = function() {
+              document.querySelectorAll("code.language-chart").forEach(function(block, i) {
+                  try {
+                      let jsonStr = block.textContent;
+                      // Remove comments or markdown artifacts if any
+                      jsonStr = jsonStr.replace(/^\\s*\\/\\/.*$/gm, '');
+                      let data = JSON.parse(jsonStr);
+                      let canvas = document.createElement("canvas");
+                      canvas.id = "chart-" + i;
+                      canvas.style.maxHeight = "400px";
+                      canvas.style.marginTop = "20px";
+                      canvas.style.marginBottom = "20px";
+                      block.parentNode.replaceWith(canvas);
+                      new Chart(canvas, data);
+                  } catch(e) {
+                      console.error("Chart parsing error", e);
+                  }
+              });
+          };
+          window.addEventListener('DOMContentLoaded', window.renderCharts);
+        </script>
+        """
 
     # Scroll position preservation script
     scripts += """
@@ -342,9 +446,26 @@ def build_preview_html(
         const scrollY = window._markpadScrollY;
         document.getElementById('content').innerHTML = html;
         window.scrollTo(0, scrollY);
-        // Re-run MathJax if loaded
+        
+        // Re-run MathJax
         if (window.MathJax && window.MathJax.typeset) {
           try { window.MathJax.typeset(); } catch(e) {}
+        }
+        
+        // Re-run Mermaid
+        if (window.mermaid) {
+          document.querySelectorAll("code.language-mermaid").forEach(function(block) {
+              let div = document.createElement("div");
+              div.className = "mermaid";
+              div.textContent = block.textContent;
+              block.parentNode.replaceWith(div);
+          });
+          try { window.mermaid.run({ querySelector: '.mermaid' }); } catch(e) {}
+        }
+        
+        // Re-run Charts
+        if (window.renderCharts) {
+            window.renderCharts();
         }
       };
     </script>

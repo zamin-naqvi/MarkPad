@@ -1,11 +1,7 @@
-"""
-Application settings and preferences manager.
-"""
-
+"""Application settings and preferences manager."""
 import json
 import os
-from typing import Any
-
+from typing import Any, Optional
 
 DEFAULT_SETTINGS = {
     "theme": "light",
@@ -22,7 +18,6 @@ DEFAULT_SETTINGS = {
     "scroll_sync": True,
     "show_line_numbers": True,
     "editor_font_family": "Consolas",
-    "preview_font_family": "-apple-system, Segoe UI, Helvetica Neue, Arial, sans-serif",
 }
 
 
@@ -47,7 +42,6 @@ class Settings:
                 pass
 
     def save(self):
-        """Persist settings to disk."""
         os.makedirs(self._dir, exist_ok=True)
         with open(self._path, "w") as f:
             json.dump(self._data, f, indent=2)
@@ -67,7 +61,3 @@ class Settings:
     @property
     def config_dir(self) -> str:
         return self._dir
-
-
-# Fix: need Optional import
-from typing import Optional
